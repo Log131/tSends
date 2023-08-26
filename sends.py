@@ -12,12 +12,18 @@ api_hash = "190bab1ff00c4f6c4c698cf1157d1493"
 
 csg = Client("acc", api_id, api_hash)
 
-async def fffff():
-    async with Client("acc", api_id, api_hash) as csg:
-        s = input('File path :')
-        await csg.send_document(chat_id=1624519308, document=s)
+@csg.on_message()
+async def fffff(client, message):
+    if message.text == 'sends':
+        s = input('File path')
+        await csg.send_document(chat_id='me', document=s)
 
 
 
 
-asyncio.run(fffff())
+
+
+
+
+
+csg.run()
