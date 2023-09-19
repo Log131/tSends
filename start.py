@@ -12,7 +12,7 @@ subprocess.run(['sudo', 'modprobe', 'wireguard'])
 
 
 
-private_key = subprocess.check_output(['wg', 'getkey']).decode().strip()
+private_key = subprocess.check_output(['wg', 'genkey']).decode().strip()
 public_key = subprocess.check_output(['echo', '-n', private_key, '|', 'wg', 'pubkey']).decode().strip()
 
 
