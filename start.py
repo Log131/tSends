@@ -4,40 +4,42 @@ import subprocess
 
 subprocess.run(['sudo', 'apt', 'update'])
 subprocess.run(['sudo', 'apt', 'upgrade', '-y'])
-subprocess.run(['sudo', 'apt', 'install', '-y', 'wireguard-tools'])
+subprocess.run(['sudo', 'apt', 'install', '-y', 'wireguard'])
 
-subprocess.run(['sudo', 'modprobe', 'wireguard'])
-
-
-
+subprocess.run(['sudo', 'wg', 'genkey', '|', 'tee', '/etc/wireguard/privatekey'])
+subprocess.run(['sudo', 'wg', 'pubkey', '|', 'tee', '/etc/wireguard/privatekey', '|', 'wg', 'pubkey', '|', 'tee', 'etc/wireguard/publickey'])
 
 
-private_key = subprocess.check_output(['wg', 'genkey']).decode().strip()
-public_key = subprocess.check_output(['echo', '-n', private_key, '|', 'wg', 'pubkey']).decode().strip()
+subprocess.run(['echo', 'net.ipv4.ip_forward=1', '>>', '/etc/sysctl.conf'])
 
-
+subprocess.run(['sysctl', '-p'])
+subprocess.run(['sudo', 'wg', 'genkey', '|', 'tee', '/etc/wireguard/qwe', '|', 'wg', 'pubkey', '|', 'tee', '/etc/wireguard/qwe'])
 
 
 
 
 
 
-server_config = f"""
-[Interface]
-Address = 10.0.0.1/24
-SaveConfig = true
-PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
-ListenPort = 51820
+
+
+with open('/etc/wireguard/qwe', 'r')as f:
+    pub_key = f.read().strip()
+
+with open('/etc/wireguard/publickey', 'r') as files:
+    private_key = files.read().strip()
+
+server_config = f"""[Interface]
 PrivateKey = {private_key}
+Address = 10.0.0.2/32
+DNS = 8.8.8.8
 
 [Peer]
-PublicKey = {public_key}
-AllowedIPs = 10.0.0.2/32
-
+PublicKey = {pub_key}
+Endpoint = server:51830
+AllowedIPs = 0.0.0.0/0
+PersistentKeepalive = 20
 """
-with open('/etc/wireguard/wg0.conf', 'w') as f:
-    f.write(server_config)
+
 
 
 
