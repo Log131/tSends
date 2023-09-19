@@ -2,18 +2,16 @@ import subprocess
 
 
 
-subprocess.run(['sudo', 'apt', 'update'])
-subprocess.run(['sudo', 'apt', 'upgrade', '-y'])
-subprocess.run(['sudo', 'apt', 'install', '-y', 'wireguard'])
 
-subprocess.run(['sudo', 'wg', 'genkey', '|', 'tee', '/etc/wireguard/privatekey'])
-subprocess.run(['sudo', 'wg', 'pubkey', '|', 'tee', '/etc/wireguard/privatekey', '|', 'wg', 'pubkey', '|', 'tee', 'etc/wireguard/publickey'])
+
+subprocess.run(['sudo', 'wg', 'genkey', '|','sudo', 'tee', '/etc/wireguard/privatekey'])
+subprocess.run(['sudo', 'wg', 'pubkey', '|','sudo', 'tee', '/etc/wireguard/privatekey', '|', 'wg', 'pubkey', '|','sudo', 'tee', 'etc/wireguard/publickey'])
 
 
 subprocess.run(['echo', 'net.ipv4.ip_forward=1', '>>', '/etc/sysctl.conf'])
 
 subprocess.run(['sysctl', '-p'])
-subprocess.run(['sudo', 'wg', 'genkey', '|', 'tee', '/etc/wireguard/qwe', '|', 'wg', 'pubkey', '|', 'tee', '/etc/wireguard/qwe'])
+subprocess.run(['sudo', 'wg', 'genkey', '|','sudo', 'tee', '/etc/wireguard/qwe', '|', 'wg', 'pubkey', '|','sudo', 'tee', '/etc/wireguard/qwe'])
 
 
 
