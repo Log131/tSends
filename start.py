@@ -10,7 +10,7 @@ subprocess.run(['sudo', 'modprobe', 'wireguard'])
 
 
 
-subprocess.run(['umask', '077'])
+
 
 private_key = subprocess.check_output(['wg', 'getkey']).decode().strip()
 public_key = subprocess.check_output(['echo', '-n', private_key, '|', 'wg', 'pubkey']).decode().strip()
@@ -32,9 +32,10 @@ ListenPort = 51820
 PrivateKey = {private_key}
 
 [Peer]
-# Добавьте информацию о клиентах здесь
-"""
+PublicKey = {public_key}
+AllowedIPs = 10.0.0.2/32
 
+"""
 with open('/etc/wireguard/wg0.conf', 'w') as f:
     f.write(server_config)
 
